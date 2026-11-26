@@ -18,7 +18,7 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,5vw,2.6rem)
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
 @media (max-width:420px){.grid{grid-template-columns:1fr}}
 figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
-video{width:100%;max-width:100%;aspect-ratio:16/9;display:block;background:#000}
+video{width:100%;max-width:100%;aspect-ratio:4/3;display:block;background:#000}
 figcaption{padding:10px 14px 12px;display:flex;gap:10px;align-items:baseline}
 .n{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:600;font-size:.85rem}
 .t{font-weight:500;min-width:0}
@@ -27,22 +27,22 @@ figcaption{padding:10px 14px 12px;display:flex;gap:10px;align-items:baseline}
 
 <div class="wrap">
   <h1>Stickers de Lázaro</h1>
-  <p class="lede">5 cortes del video original, con su imagen y su audio tal cual. Cada corte termina donde aparece «LOVE ME». Toca ▶ para verlo con sonido.</p>
+  <p class="lede">5 cortes del video original, con su imagen y su audio tal cual. Cada corte termina justo después de que suena «LOVE ME», y el encuadre deja fuera la marca de TikTok. Toca ▶ para verlo con sonido.</p>
   <div class="grid" id="grid"></div>
 </div>
 
 <script>
 const S=[
- ["corte_01","«¡Lázaro, levántate!»","0:00 – 0:06"],
- ["corte_02","Marta: «Señor, si hubieras estado aquí…»","0:09 – 0:25"],
- ["corte_03","«Tu hermano resucitará»","0:27 – 0:42"],
- ["corte_04","«Yo soy la resurrección y la vida»","0:44 – 0:58"],
+ ["corte_01","«¡Lázaro, levántate!»","0:00 – 0:09"],
+ ["corte_02","Marta: «Señor, si hubieras estado aquí…»","0:09 – 0:27"],
+ ["corte_03","«Tu hermano resucitará»","0:27 – 0:45"],
+ ["corte_04","«Yo soy la resurrección y la vida»","0:45 – 1:00"],
  ["corte_05","Lázaro sale de la tumba","1:00 – 1:19"]];
 const grid=document.getElementById('grid');
 S.forEach(([f,t,tm],i)=>{
   const fig=document.createElement('figure');
   const v=document.createElement('video');
-  v.src='cortes/'+f+'.mp4';v.controls=true;v.playsInline=true;v.preload='metadata';v.setAttribute('aria-label',t);
+  v.src='cortes/'+f+'.mp4?v=3';v.controls=true;v.playsInline=true;v.preload='metadata';v.setAttribute('aria-label',t);
   v.addEventListener('play',()=>document.querySelectorAll('video').forEach(o=>{if(o!==v)o.pause()}));
   const c=document.createElement('figcaption');
   c.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span><span class="t"></span><span class="time">'+tm+'</span>';
