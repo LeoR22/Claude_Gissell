@@ -1,0 +1,84 @@
+<title>Stickers de Lázaro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: encabezado corto + cuadrícula de tarjetas cuadradas, cada una con su sticker y su clip con audio */
+:root{
+  --bg:#f6f3ee; --surface:#ffffff; --fg:#2a241d; --muted:#7a6f62; --line:#e4ddd2; --accent:#9a5b2c;
+  --display:"Fraunces",Georgia,serif; --body:"Inter",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17140f; --surface:#221e18; --fg:#f1ebe2; --muted:#a89c8c; --line:#3a332a; --accent:#e0a36f; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17140f; --surface:#221e18; --fg:#f1ebe2; --muted:#a89c8c; --line:#3a332a; --accent:#e0a36f; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding-block:28px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,5vw,2.6rem);margin:0 0 6px;text-wrap:balance}
+.lede{color:var(--muted);margin:0 0 20px;max-width:62ch}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:3px;margin-bottom:22px;background:var(--surface)}
+.toggle button{font:inherit;font-weight:500;border:0;background:transparent;color:var(--muted);padding:7px 14px;border-radius:999px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+.toggle button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.media{aspect-ratio:1/1;max-width:100%;background:#000}
+.media video,.media img{width:100%;height:100%;display:block;object-fit:cover}
+figcaption{padding:10px 12px 12px;display:flex;gap:10px;align-items:baseline}
+.n{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:600;font-size:.85rem}
+.t{font-weight:500;min-width:0}
+.time{margin-left:auto;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{color:var(--muted);font-size:.85rem;margin-top:26px;max-width:70ch}
+</style>
+
+<div class="wrap">
+  <h1>Stickers de Lázaro</h1>
+  <p class="lede">12 escenas del video. En <b>Con audio</b> toca ▶ en cualquier tarjeta para oír la voz original; en <b>Sticker WhatsApp</b> ves cómo queda el sticker animado (sin sonido).</p>
+  <div class="toggle" role="group" aria-label="Versión">
+    <button id="b-audio" aria-pressed="true">Con audio</button>
+    <button id="b-webp" aria-pressed="false">Sticker WhatsApp</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="note">Los stickers de WhatsApp no admiten sonido, por eso hay dos versiones. Para enviar una frase con su voz, comparte el video corto.</p>
+</div>
+
+<script>
+const S=[
+ ["01_lazaro_levantate","¡Lázaro, levántate!","0:01"],
+ ["02_si_hubieras_estado_aqui","Señor, si hubieras estado aquí…","0:09"],
+ ["03_por_que_no_viniste","¿Por qué no viniste?","0:16"],
+ ["04_les_mostrare","Les mostraré por qué","0:23"],
+ ["05_tu_hermano_resucitara","Tu hermano resucitará","0:27"],
+ ["06_el_dia_final","…en el día final","0:29"],
+ ["07_no_me_refiero","No me refiero a esa resurrección","0:35"],
+ ["08_yo_soy_la_resurreccion","Yo soy la resurrección y la vida","0:40"],
+ ["09_aun_despues_de_morir","Aún después de morir, vivirá","0:48"],
+ ["10_jamas_morira","…jamás morirá","0:53"],
+ ["11_lazaro_sale","Lázaro sale de la tumba","1:04"],
+ ["12_esta_vivo","Las hermanas celebran","1:10"]];
+const grid=document.getElementById('grid');
+let mode='audio';
+function render(){
+  grid.innerHTML='';
+  S.forEach(([f,t,tm],i)=>{
+    const fig=document.createElement('figure');
+    const m=document.createElement('div');m.className='media';
+    if(mode==='audio'){
+      const v=document.createElement('video');
+      v.src='con_audio_mp4/'+f+'.mp4';v.controls=true;v.playsInline=true;v.preload='metadata';
+      v.setAttribute('aria-label',t);
+      v.addEventListener('play',()=>document.querySelectorAll('video').forEach(o=>{if(o!==v)o.pause()}));
+      m.appendChild(v);
+    }else{
+      const im=document.createElement('img');im.src='whatsapp_webp/'+f+'.webp';im.alt=t;im.loading='lazy';m.appendChild(im);
+    }
+    const c=document.createElement('figcaption');
+    c.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span><span class="t"></span><span class="time">'+tm+'</span>';
+    c.querySelector('.t').textContent=t;
+    fig.append(m,c);grid.appendChild(fig);
+  });
+}
+function set(m){mode=m;document.getElementById('b-audio').setAttribute('aria-pressed',m==='audio');document.getElementById('b-webp').setAttribute('aria-pressed',m==='webp');render()}
+document.getElementById('b-audio').onclick=()=>set('audio');
+document.getElementById('b-webp').onclick=()=>set('webp');
+render();
+</script>
